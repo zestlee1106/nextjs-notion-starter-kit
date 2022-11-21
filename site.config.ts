@@ -10,7 +10,7 @@ export default siteConfig({
 
   // basic site info (required)
   name: '우당탕탕 찐우영의 삽질기록',
-  domain: 'zestlee1106.github.io/',
+  domain: 'zestlee1106.vercel.app/',
   author: '영우',
 
   // open graph metadata (optional)

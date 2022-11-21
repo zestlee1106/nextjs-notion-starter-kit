@@ -20,12 +20,12 @@ import { searchNotion } from '@/lib/search-notion'
 import { useDarkMode } from '@/lib/use-dark-mode'
 
 import { Footer } from './Footer'
-import { GitHubShareButton } from './GitHubShareButton'
 import { Loading } from './Loading'
 import { NotionPageHeader } from './NotionPageHeader'
 import { Page404 } from './Page404'
 import { PageAside } from './PageAside'
 import { PageHead } from './PageHead'
+import { ReactUtterances } from './ReactUtterances'
 import styles from './styles.module.css'
 
 // -----------------------------------------------------------------------------
@@ -231,6 +231,20 @@ export const NotionPage: React.FC<types.PageProps> = ({
   const canonicalPageUrl =
     !config.isDev && getCanonicalPageUrl(site, recordMap)(pageId)
 
+  let comments: React.ReactNode = null
+
+  if (block.type === 'page' && block.parent_table === 'block') {
+    comments = (
+      <ReactUtterances
+        repo='zestlee1106/blog-comments'
+        issueMap='issue-term'
+        issueTerm='title'
+        label='blog'
+        theme='preferred-color-scheme'
+      />
+    )
+  }
+
   const socialImage = mapImageUrl(
     getPageProperty<string>('Social Image', block, recordMap) ||
       (block as PageBlock).format?.page_cover ||
@@ -252,10 +266,8 @@ export const NotionPage: React.FC<types.PageProps> = ({
         image={socialImage}
         url={canonicalPageUrl}
       />
-
       {isLiteMode && <BodyClassName className='notion-lite' />}
       {isDarkMode && <BodyClassName className='dark-mode' />}
-
       <NotionRenderer
         bodyClassName={cs(
           styles.notion,
@@ -278,10 +290,9 @@ export const NotionPage: React.FC<types.PageProps> = ({
         mapImageUrl={mapImageUrl}
         searchNotion={config.isSearchEnabled ? searchNotion : null}
         pageAside={pageAside}
+        pageFooter={comments}
         footer={footer}
       />
-
-      <GitHubShareButton />
     </>
   )
 }
